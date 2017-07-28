@@ -51,10 +51,18 @@ MAKE_FLAGS += \
 	CROSS_COMPILE="$(TARGET_CROSS)" \
 	all
 
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/include
+	$(CP) $(PKG_BUILD_DIR)/src/include/*.h $(1)/usr/include/
+
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_BUILD_DIR)/lib/libndpi.{a,so*} $(1)/usr/lib/
+endef
+
 define Package/ndpi/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_BUILD_DIR)/lib/* $(1)/usr/lib/
+	$(CP) $(PKG_BUILD_DIR)/lib/libndpi.so* $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/example/ndpiReader $(1)/usr/bin/ndpiReader
 endef
 
