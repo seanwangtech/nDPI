@@ -2,8 +2,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ndpi
-PKG_RELEASE:=1
-PKG_VERSION:=2.0
+PKG_RELEASE:=0
+PKG_VERSION:=2.1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/ntop/nDPI.git
@@ -12,6 +12,7 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_PROTO:=git
 
 PKG_FIXUP:=autoreconf
+PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -48,22 +49,22 @@ MAKE_FLAGS += \
 	KERNEL_DIR=$(LINUX_DIR) \
 	NDPI_PATH=$(PKG_BUILD_DIR) \
 	ARCH="$(LINUX_KARCH)" \
-	CROSS_COMPILE="$(TARGET_CROSS)" \
-	all
+	CROSS_COMPILE="$(TARGET_CROSS)" 
+
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
-	$(CP) $(PKG_BUILD_DIR)/src/include/*.h $(1)/usr/include/
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include/
 
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_BUILD_DIR)/lib/libndpi.{a,so*} $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libndpi.{a,so*} $(1)/usr/lib/
 endef
 
 define Package/ndpi/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_BUILD_DIR)/lib/libndpi.so* $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/example/ndpiReader $(1)/usr/bin/ndpiReader
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libndpi.so* $(1)/usr/lib/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/ndpiReader $(1)/usr/bin/ndpiReader
 endef
 
 $(eval $(call BuildPackage,ndpi))
